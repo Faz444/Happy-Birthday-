@@ -1,0 +1,303 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Happy Birthday, My Girl!</title>     
+    <link type="text/css" rel="stylesheet" href="file/default.css">
+    <script type="text/javascript" src="file/jquery.min.js"></script>
+    <script type="text/javascript" src="file/jscex.min.js"></script>
+    <script type="text/javascript" src="file/jscex-parser.js"></script>
+    <script type="text/javascript" src="file/jscex-jit.js"></script>
+    <script type="text/javascript" src="file/jscex-builderbase.min.js"></script>
+    <script type="text/javascript" src="file/jscex-async.min.js"></script>
+    <script type="text/javascript" src="file/jscex-async-powerpack.min.js"></script>
+    <script type="text/javascript" src="file/function.js" charset="utf-8"></script>
+    <script type="text/javascript" src="file/love.js" charset="utf-8"></script>
+    
+    <style>
+    /* Position the text further left and higher */
+    #text {
+        width: 420px !important;
+        height: 500px !important;
+
+        position: absolute !important;
+        left: 70px !important;
+        top: 70px !important;
+
+        pointer-events: none;
+        z-index: 10;
+    }
+
+    #code {
+        font-size: 15px !important;
+        line-height: 30px !important;
+        color: #d9ffff;
+
+        pointer-events: auto;
+    }
+
+    /* Keep the tree behind the text */
+    #canvas {
+        z-index: 1;
+    }
+
+    #fireworks {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1100px;
+    height: 680px;
+    pointer-events: none;
+    z-index: 30;
+}
+</style>
+
+    <script>
+        function playAudio() {
+            var audio = document.getElementById("myAudio");
+            audio.play();
+        }
+    </script>
+</head>
+<body>
+    <div id="main">
+        <div id="error"><a href="http://www.google.cn/chrome/intl/zh-CN/landing_chrome.html?hl=zh-CN&brand=CHMI">Chrome</a> (<a href="http://firefox.com.cn/download/">Firefox</a>)</div>
+        <audio autoplay="autoplay" height="100" width="100" id="myAudio">
+            <source src="aud.mp3" type="audio/mp3" />
+            <embed height="100" width="100" src="aud.mp3" />
+        </audio>
+        <div id="wrap">
+            <div id="text">
+                <div id="code">
+                    <span class="say">Happy Birthday to the most amazing girl everrrr🥳🤗</span><br>
+                    <span class="say">You are literally the prettiest, funniest, most annoyingly perfect human being I have ever seen in my life and I say annoying because it is actually unfair how good you are at everything including having the most gorgeous eyes on the planet ✨
+</span><br>
+                    <span class="say">You are not just my girlfriend. You are my favourite person, my peace, my "okay everything is going to be fine" feeling, and genuinely the best thing that has ever happened to me 🌍❤️❤️❤️Stop thinking you are not enough. You are so much more than enough❤️❤️
+</span><br>
+                    <span class="say">Happy birthday my love❤️❤️🫂🫂🫂. You deserve the entire world and then some more🙌🙇</span><br>
+                    <br>
+                    <span class="say">  — your guy who is terrible with words but means every single one 💌🫶</span><br>
+                </div>
+            </div>
+            <div id="clock-box">
+                <span id="clock">577 days 0 hours 0 minutes 0 seconds</span>
+            </div>
+            <canvas id="canvas" width="1100" height="680"></canvas>
+            <canvas id="fireworks" width="1100" height="680"></canvas>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        var canvas = $('#canvas');
+        
+        if (!canvas[0].getContext) {
+            $("#error").show();
+            return false;
+        }
+
+        var width = canvas.width();
+        var height = canvas.height();        
+        canvas.attr("width", width);
+        canvas.attr("height", height);
+
+        var opts = {
+            seed: {
+                x: width / 2 - 20,
+                color: "rgb(190, 26, 37)",
+                scale: 2
+            },
+            branch: [
+                [535, 680, 570, 250, 500, 200, 30, 100, [
+                    [540, 500, 455, 417, 340, 400, 13, 100, [
+                        [450, 435, 434, 430, 394, 395, 2, 40]
+                    ]],
+                    [550, 445, 600, 356, 680, 345, 12, 100, [
+                        [578, 400, 648, 409, 661, 426, 3, 80]
+                    ]],
+                    [539, 281, 537, 248, 534, 217, 3, 40],
+                    [546, 397, 413, 247, 328, 244, 9, 80, [
+                        [427, 286, 383, 253, 371, 205, 2, 40],
+                        [498, 345, 435, 315, 395, 330, 4, 60]
+                    ]],
+                    [546, 357, 608, 252, 678, 221, 6, 100, [
+                        [590, 293, 646, 277, 648, 271, 2, 80]
+                    ]]
+                ]] 
+            ],
+            bloom: {
+                num: 700,
+                width: 1080,
+                height: 650,
+            },
+            footer: {
+                width: 1200,
+                height: 5,
+                speed: 10,
+            }
+        }
+
+        var tree = new Tree(canvas[0], width, height, opts);
+        var seed = tree.seed;
+        var foot = tree.footer;
+        var hold = 1;
+
+        canvas.click(function(e) {
+            playAudio();
+            var offset = canvas.offset(), x, y;
+            x = e.pageX - offset.left;
+            y = e.pageY - offset.top;
+            if (seed.hover(x, y)) {
+                hold = 0; 
+                canvas.unbind("click");
+                canvas.unbind("mousemove");
+                canvas.removeClass('hand');
+            }
+        }).mousemove(function(e) {
+            var offset = canvas.offset(), x, y;
+            x = e.pageX - offset.left;
+            y = e.pageY - offset.top;
+            canvas.toggleClass('hand', seed.hover(x, y));
+        });
+
+        var seedAnimate = eval(Jscex.compile("async", function () {
+            seed.draw();
+            while (hold) {
+                $await(Jscex.Async.sleep(10));
+            }
+            while (seed.canScale()) {
+                seed.scale(0.95);
+                $await(Jscex.Async.sleep(10));
+            }
+            while (seed.canMove()) {
+                seed.move(0, 2);
+                foot.draw();
+                $await(Jscex.Async.sleep(10));
+            }
+        }));
+
+        var growAnimate = eval(Jscex.compile("async", function () {
+            do {
+                tree.grow();
+                $await(Jscex.Async.sleep(10));
+            } while (tree.canGrow());
+        }));
+
+        var flowAnimate = eval(Jscex.compile("async", function () {
+            do {
+                tree.flower(2);
+                $await(Jscex.Async.sleep(10));
+            } while (tree.canFlower());
+        }));
+
+        var moveAnimate = eval(Jscex.compile("async", function () {
+            tree.snapshot("p1", 240, 0, 610, 680);
+            while (tree.move("p1", 500, 0)) {
+                foot.draw();
+                $await(Jscex.Async.sleep(10));
+            }
+            foot.draw();
+            tree.snapshot("p2", 500, 0, 610, 680);
+
+            canvas.parent().css("background", "url(" + tree.toDataURL('image/png') + ")");
+            canvas.css("background", "#ffe");
+            $await(Jscex.Async.sleep(300));
+            canvas.css("background", "none");
+        }));
+
+        var textAnimate = eval(Jscex.compile("async", function () {
+            $("#code").show().typewriter();
+
+            $await(Jscex.Async.sleep(10000));
+
+            startFireworks();
+
+        }));
+        
+        var runAsync = eval(Jscex.compile("async", function () {
+            $await(seedAnimate());
+            $await(growAnimate());
+            $await(flowAnimate());
+            $await(moveAnimate());
+            textAnimate().start();
+        }));
+
+        function startFireworks() {
+
+    var fwCanvas = document.getElementById("fireworks");
+    var ctx = fwCanvas.getContext("2d");
+
+    var particles = [];
+
+    function createHeart(cx, cy) {
+
+        for (var t = 0; t < Math.PI * 2; t += 0.12) {
+
+            var hx = 16 * Math.pow(Math.sin(t), 3);
+
+            var hy =
+                -(13 * Math.cos(t)
+                - 5 * Math.cos(2 * t)
+                - 2 * Math.cos(3 * t)
+                - Math.cos(4 * t));
+
+            particles.push({
+                x: cx,
+                y: cy,
+                vx: hx * 0.4,
+                vy: hy * 0.4,
+                life: 120,
+                hue: Math.random() * 360
+            });
+        }
+    }
+
+    setInterval(function() {
+
+        createHeart(
+            700 + Math.random() * 200,
+            150 + Math.random() * 180
+        );
+
+    }, 1800);
+
+    function animate() {
+
+        ctx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+
+        for (var i = particles.length - 1; i >= 0; i--) {
+
+            var p = particles[i];
+
+            p.x += p.vx;
+            p.y += p.vy;
+
+            p.life--;
+
+            ctx.fillStyle =
+                "hsla(" +
+                p.hue +
+                ",100%,70%," +
+                (p.life / 120) +
+                ")";
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            if (p.life <= 0) {
+                particles.splice(i, 1);
+            }
+        }
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+}
+
+        runAsync().start();
+    })();
+    </script>
+</body>
+</html>
